@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { TimePicker } from '@mui/x-date-pickers';
 import { Button } from '@mui/material';
+import { disableAllYearsNot2022, disableDecemberToSeptember } from '../utils';
 
 export const AppointmentPage = () => {
     const [vehicule, setVehicule] = useState<VehicleType | "">("");
@@ -35,7 +36,7 @@ export const AppointmentPage = () => {
                         <MenuItem value={VehicleType.ClassOneTruck}>Class 1 Truck</MenuItem>
                         <MenuItem value={VehicleType.ClassTwoTruck}>Class 2 Truck</MenuItem>
                     </Select>
-                    <DateCalendar />
+                    <DateCalendar shouldDisableMonth={disableDecemberToSeptember} shouldDisableYear={disableAllYearsNot2022}/>
                     <TimePicker label="Basic time picker" />
                     <Box display="flex" justifyContent="center" marginTop="10px">
                         <Button variant='contained'>Submit</Button>

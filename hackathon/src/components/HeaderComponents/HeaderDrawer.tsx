@@ -5,6 +5,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import HomeIcon from '@mui/icons-material/Home';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { useNavigate } from "react-router";
+import CarRepairIcon from '@mui/icons-material/CarRepair';
 
 interface HeaderDrawerProps {
     drawerIsOpen: boolean;
@@ -12,10 +13,11 @@ interface HeaderDrawerProps {
 }
 
 export const HeaderDrawer: FC<HeaderDrawerProps> = (props: HeaderDrawerProps): JSX.Element => {
-    /*const navigate = useNavigate();
-    const goToHomePage = () => navigate("/");
-    const goToCalendarPage = () => navigate("/calendar");
-*/
+    const navigate = useNavigate();
+    const goToHomePage = () => {navigate("/"); props.setDrawerIsOpen(false)};
+    const goToCalendarPage = () => {navigate("/calendar"); props.setDrawerIsOpen(false)};
+    const goToAppointmentPage = () => {navigate("/appointment"); props.setDrawerIsOpen(false)};
+
     return (
         <Drawer
             anchor="left"
@@ -30,8 +32,9 @@ export const HeaderDrawer: FC<HeaderDrawerProps> = (props: HeaderDrawerProps): J
                     </IconButton>
                 </Box>
                 <Divider/>
-                <Button sx={{width: "80%", display: "flex", justifyContent: "space-between", alignSelf:"center"}} endIcon={<HomeIcon/>}>Home</Button>
-                <Button sx={{width: "80%", display: "flex", justifyContent: "space-between", alignSelf:"center"}} endIcon={<CalendarMonthIcon/>}>Calendar</Button>
+                <Button onClick={() => goToHomePage()} sx={{width: "80%", display: "flex", justifyContent: "space-between", alignSelf:"center"}} endIcon={<HomeIcon/>}>Home</Button>
+                <Button onClick={() => goToAppointmentPage()} sx={{width: "80%", display: "flex", justifyContent: "space-between", alignSelf:"center"}} endIcon={<CarRepairIcon/>}>Appointment</Button>
+                <Button onClick={() => goToCalendarPage()} sx={{width: "80%", display: "flex", justifyContent: "space-between", alignSelf:"center"}} endIcon={<CalendarMonthIcon/>}>Calendar</Button>
             </Box>
         </Drawer>
     );
