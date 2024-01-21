@@ -61,7 +61,7 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                     };
 
                     const result = await insertAppointment(car_appointment);
-                    if (result && (result === 'duplicate' || result === 'overlapping')) { results.push([car_appointment, result]) }
+                    if (result ) { results.push([car_appointment, result]) } // (result === 'duplicate' || result === 'overlapping')
 
                 } else {
                     console.error('Invalid row format:', row);
