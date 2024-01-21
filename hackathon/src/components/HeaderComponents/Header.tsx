@@ -6,8 +6,9 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { ToggleColorMode } from './ColorPaletteButton';
-import { FC } from 'react';
-import { ThemeColor } from '../types';
+import { FC, useState } from 'react';
+import { ThemeColor } from '../../types';
+import { HeaderDrawer } from './HeaderDrawer';
 
 interface HeaderProps {
   themeColor: ThemeColor;
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 export const Header: FC<HeaderProps> = (props: HeaderProps): JSX.Element => {  
+  const [drawerIsOpen, setDrawerIsOpen] = useState<boolean>(false);
   return (
     <Box>
       <AppBar position="static">
@@ -22,6 +24,7 @@ export const Header: FC<HeaderProps> = (props: HeaderProps): JSX.Element => {
           <IconButton
             size="large"
             aria-label="menu"
+            onClick={() => setDrawerIsOpen(true)}
           >
             <MenuIcon />
           </IconButton>
@@ -32,6 +35,7 @@ export const Header: FC<HeaderProps> = (props: HeaderProps): JSX.Element => {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
+      <HeaderDrawer drawerIsOpen={drawerIsOpen} setDrawerIsOpen={setDrawerIsOpen} />
     </Box>
   );
 }

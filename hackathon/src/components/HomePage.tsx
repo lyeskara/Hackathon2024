@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
 import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
+import { useNavigate } from "react-router";
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -17,6 +18,9 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function HomePage() {
+    const navigate = useNavigate();
+    const goToAppointmentPage = () => navigate("/appointment");
+
     return (
         <Box 
             width="100%" 
@@ -33,7 +37,7 @@ function HomePage() {
             >
                 <Box display="flex" alignItems="center" flexDirection="column" justifyContent="space-around">
                     <CarRepairOutlinedIcon sx={{ fontSize: 60 }} />
-                    <Button variant="outlined">Add a walk-in</Button>
+                    <Button variant="outlined" onClick={goToAppointmentPage}>Add an appointment</Button>
                 </Box>
                 <Divider orientation="vertical" variant="middle" flexItem />
 
