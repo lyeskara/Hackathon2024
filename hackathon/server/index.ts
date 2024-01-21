@@ -20,7 +20,7 @@ app.use(cors())
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-app.get("/get_appointments", async (req,res)=>{
+app.get("/get_appointments", async (req, res) => {
     const date = req.body.date
     const newDate = new Date(date)
     const result = await getAppointments(newDate)
@@ -64,7 +64,7 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                     vehicle: vehicle.toLowerCase() as VehicleType
                 };
 
-                const result = await insertAppointment(car_appointment);
+                await insertAppointment(car_appointment);
 
             } else {
                 console.error('Invalid row format:', row);
