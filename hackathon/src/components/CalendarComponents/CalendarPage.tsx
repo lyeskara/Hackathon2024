@@ -6,12 +6,18 @@ import { CalendarPageTable } from "./CalendarPageTable";
 import axios from "axios";
 
 export const CalendarPage: FC = () => {    
-    const [dateValue, setDateValue] = useState<Date>();    
+    const [dateValue, setDateValue] = useState<Date>();
+    const [generatedDateValue, setGeneratedDateValue] = useState<Date>();   
     const IP_ADDRESS = import.meta.env.VITE_API_URL
+    const [happyCustomers, setHappyCustomers] = useState<number>(0);
+    const [turnedAwayCustomers, setTurnedAwayCustomers] = useState<number>(0);
+    const [totalRevenue, setTotalRevenue] = useState<number>(0);
+    const [totalLoss, setTotalLoss] = useState<number>(0);
     const generateData = async () => {        
         if(dateValue){
             try {
                 const response = await axios.get(`${IP_ADDRESS}/get_appointments`, {params: {date: dateValue.toISOString()}});                
+                setGeneratedDateValue(dateValue);
 
                 if (!response.data) {
                     // Handle non-OK responses
@@ -20,7 +26,12 @@ export const CalendarPage: FC = () => {
                 }
                 else{
                     console.log('Server response:', response.data);
-                
+                    console.log(response.data);
+                    
+                    setHappyCustomers(response.data.appointments.length);
+                    setTotalRevenue(response.data.profit_made);
+                    setTurnedAwayCustomers(response.data.turned_away);
+                    setTotalLoss(response.data.money_lost);
                 }
             }
             catch (error) {
@@ -44,8 +55,13 @@ export const CalendarPage: FC = () => {
                         <Button onClick={generateData} variant='contained'>Generate Data</Button>
                     </Box>
                 </FormControl>
-                <Typography variant="h6" marginTop="10px">Data for: </Typography>
-                <CalendarPageTable />
+                <Typography variant="h6" marginTop="10px">Data for: {generatedDateValue ? generatedDateValue.toString() : ""}</Typography>
+                <CalendarPageTable 
+                    happyCustomers={happyCustomers}
+                    turnedAwayCustomers={turnedAwayCustomers}
+                    totalRevenue={totalRevenue}
+                    totalLoss={totalLoss}
+                />
             </Paper>
         </Box>
     );

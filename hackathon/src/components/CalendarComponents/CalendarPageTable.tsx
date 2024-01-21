@@ -1,16 +1,17 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from "@mui/material";
 import Paper from '@mui/material/Paper';
 
 const RedTableCell = styled(TableCell)(() => ({color: "red"}));
 const GreenTableCell = styled(TableCell)(() => ({color: "green"}));
-export const CalendarPageTable: FC  = () => {
-    const [happyCustomers, setHappyCustomers] = useState<number>(0);
-    const [turnedAwayCustomers, setTurnedAwayCustomers] = useState<number>(0);
 
-    const [totalRevenue, setTotalRevenue] = useState<number>(0);
-    const [totalLoss, setTotalLoss] = useState<number>(0);
-
+interface CalendarPageTableProps {
+    happyCustomers: number;
+    turnedAwayCustomers: number;
+    totalRevenue: number;
+    totalLoss: number;
+}
+export const CalendarPageTable: FC<CalendarPageTableProps> = (props) => {
     return(
         <TableContainer component={Paper}>
             <Table id="Number of customers table">
@@ -22,8 +23,8 @@ export const CalendarPageTable: FC  = () => {
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                        <GreenTableCell align="center">2</GreenTableCell>
-                        <RedTableCell align="center">2</RedTableCell>
+                        <GreenTableCell align="center">{props.happyCustomers}</GreenTableCell>
+                        <RedTableCell align="center">{props.turnedAwayCustomers}</RedTableCell>
                     </TableRow>
                 </TableBody>
             </Table>
@@ -37,8 +38,8 @@ export const CalendarPageTable: FC  = () => {
                 </TableHead>
                 <TableBody>
                     <TableRow>
-                        <GreenTableCell align="center">2</GreenTableCell>
-                        <RedTableCell align="center">2</RedTableCell>
+                        <GreenTableCell align="center">{props.totalRevenue}</GreenTableCell>
+                        <RedTableCell align="center">{props.totalLoss}</RedTableCell>
                     </TableRow>
                 </TableBody>
             </Table>

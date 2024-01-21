@@ -127,11 +127,15 @@ async function maximizeProfit(data) {
                             so if in given time period giving a priority to one client over many clients generate more revenue then do it
                             
                             you are expected to generate a json object of this format
-
+                            do not forget to add the cost of the appointment to the money_lost variable when you're turning away clients
+                            and make sure that you add 1 to the turned_away variable when you're turning away clients these are very important,
+                            you must make sure that you are at ALL TIMES keeping track of all of the variables, appointments, profit_made, turned_away and money_lost.
 
                             {
                             "appointments":[the expected sorted appointments chosen by you following the rules maximizing profit while scheduling clients]
                             "profit_made": "number in js type of number indicates the max money made with the combination of appointment you chose that maximize profit"
+                            "turned_away": "number in js type of number indicates the number of clients that were turned away"
+                            "money_lost": "number in js type of number indicates the money lost from the turned away clients"    
                             }
 
 
@@ -140,7 +144,9 @@ async function maximizeProfit(data) {
                             {
                             "appointments":[the expected sorted appointments chosen by you following the rules maximizing profit while scheduling clients]
                             "profit_made": "number in js type of number indicates the max money made with the combination of appointment you chose that maximize profit"
-                            }
+                            "turned_away": "number in js type of number indicates the number of clients that were turned away"
+                            "money_lost": "number in js type of number indicates the money lost from the turned away clients"    
+                        }
 
 
 
@@ -151,7 +157,16 @@ async function maximizeProfit(data) {
                             AND DONT GENERATE ANY OUTPUT THAT DOESNT MATCH THE RULES
 
                             generate final output where you have an array of appointments in json alongside variable showing profit for the day
-                            
+                            don't forget that for every client that you turn away, you need to increase the count by 1 for the turned_away number and
+                            when you turn away a client, you need to add the cost of the appointment to the money_lost variable
+                            so make sure that when you're optimizing the queue that whoever you turn away you're adding the cost of their appointment to the money_lost variable
+                            and you're increasing the turned_away variable by 1 do not forget that
+                            and if you're not turning away any clients, then the turned_away variable should be 0 and the money_lost variable should be 0
+                            make sure that the turned_away and money_lost variables are not always 0, dont forget to add them up when you're turning away clients
+                            and make sure that you add the cost of the appointment to the money_lost variable when you're turning away clients
+                            if there are 20 clients for a specific day, and you only appoint 15 of them, then you need to add the cost of the 5 appointments that you turned away to the money_lost variable and turn_away variable should be 5
+                            do not forget the rules, if you're turning away clients, you need to add the cost of their appointment to the money_lost variable and increase the turned_away variable by 1 
+
                             appointment : {
                                 cost: ,
                                 appointment_time: ,
@@ -163,21 +178,70 @@ async function maximizeProfit(data) {
                             {
                                 "appointments": appointment[]
                                 "profit_made": "number in js type of number indicates the max money made with the combination of appointment you chose that maximize profit"
+                                "turned_away": "number in js type of number indicates the number of clients that were turned away"
+                                "money_lost": "number in js type of number indicates the money lost from the turned away clients"
                             } 
-                            OR NULL
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
-                            JSON ONLY
+
+
                             
-                            
+                            no matter what make sure that turned_away variable is never 0 and that you at least have some money_lost make sure that you follow the guidelines for the prices 
+
+                            This is an amazing example of what the output should look like, maybe with higher numbers, but this is the format that you need to follow
+                            JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY JSON ONLY 
+                            :
+                            {
+                                "appointments": [
+                                    {
+                                        "cost": 150,
+                                        "appointment_time": "2022-08-01T08:00:00",
+                                        "finishing_time": "2022-08-01T08:30:00",
+                                        "vehicle": "Compact Car"
+                                    },
+                                    {
+                                        "cost": 150,
+                                        "appointment_time": "2022-08-01T09:00:00",
+                                        "finishing_time": "2022-08-01T09:30:00",
+                                        "vehicle": "Medium Car"
+                                    },
+                                    {
+                                        "cost": 150,
+                                        "appointment_time": "2022-08-01T10:00:00",
+                                        "finishing_time": "2022-08-01T10:30:00",
+                                        "vehicle": "Full-size Car"
+                                    },
+                                    {
+                                        "cost": 250,
+                                        "appointment_time": "2022-08-01T11:00:00",
+                                        "finishing_time": "2022-08-01T12:00:00",
+                                        "vehicle": "Class 1 Truck"
+                                    },
+                                    {
+                                        "cost": 700,
+                                        "appointment_time": "2022-08-01T12:00:00",
+                                        "finishing_time": "2022-08-01T14:00:00",
+                                        "vehicle": "Class 2 Truck"
+                                    }
+                                ],
+                                "profit_made": 1400,
+                                "turned_away": 4,
+                                "money_lost": 600
+                            }
+
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
+                            JSON ONLY
                         `
     try {
         const chatCompletion = await openai.chat.completions.create({
