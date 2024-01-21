@@ -35,12 +35,7 @@ function HomePage() {
             console.log(IP_ADDRESS);
 
             try {
-                const response = await axios.post(`${IP_ADDRESS}/csv`, formData, {
-                    headers: {
-                      'Content-Type': 'multipart/form-data',
-                    },
-                    transformRequest: data => data,
-                  });
+                const response = await axios.post(`${IP_ADDRESS}/csv`, formData);
             
                 if (!response.data) {
                     // Handle non-OK responses

@@ -11,16 +11,14 @@ dotenv.config()
 
 const app = express()
 
-// app.use(bodyParser.json())
+app.use(bodyParser.json())
 app.use(cors())
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
-// app.use(CsvUpload())
 
 
-const PORT = process.env.PORT || 3000;
 
-const upload = multer();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 
 
@@ -39,39 +37,34 @@ app.post("/add_appointment", async (req, res) => {
 })
 
 app.post("/csv", upload.single('csvFile'), async (req, res) => {
-    console.log(1)
-
     const csvFile = req.file;
-
+    console.log(csvFile)
     if (!csvFile) {
         return res.status(400).json({ error: 'No CSV file provided' });
     }
 
     // Process the CSV file
     const stream = Readable.from([csvFile.buffer.toString()]); // []
-    const results: any[][] = []
+    console.log(stream)
     fastCsv
         .parseStream(stream, { headers: false })
-        .on('data', (row: any) => {
-            const processRow = async (row: any) => {
-                if (Array.isArray(row) && row.length === 3) {
-                    const [bookingTime, selectedTime, vehicle] = row;
-                    const bookingTimeDate = new Date(bookingTime);
-                    const selectedTimeDate = new Date(selectedTime);
-                    const car_appointment = {
-                        bookingTime: bookingTimeDate,
-                        selectedTime: selectedTimeDate,
-                        vehicle: vehicle.toLowerCase() as VehicleType
-                    };
+        .on('data', async (row: any) => {
+            if (Array.isArray(row) && row.length === 3) {
+                const [bookingTime, selectedTime, vehicle] = row;
+                const bookingTimeDate = new Date(bookingTime);
+                const selectedTimeDate = new Date(selectedTime);
+                const car_appointment = {
+                    bookingTime: bookingTimeDate,
+                    selectedTime: selectedTimeDate,
+                    vehicle: vehicle.toLowerCase() as VehicleType
+                };
+                console.log(row)
 
-                    const result = await insertAppointment(car_appointment);
-                    if (result) { results.push([car_appointment, result]) } // (result === 'duplicate' || result === 'overlapping')
+                const result = await insertAppointment(car_appointment);
 
-                } else {
-                    console.error('Invalid row format:', row);
-                }
-            };
-
+            } else {
+                console.error('Invalid row format:', row);
+            }
         })
         .on('end', () => {
             // Do something with the processed CSV data, for example, save it to a database
@@ -81,7 +74,6 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
             console.error('CSV parsing error:', error);
             res.status(500).json({ error: 'Error processing CSV file' });
         });
-    res.send(results)
 
 })
 
