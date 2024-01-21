@@ -1,11 +1,12 @@
-import { Box, Button, Divider } from "@mui/material"
+import { Box, Button, Divider } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
 import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
 import { useNavigate } from "react-router";
-import axios from 'axios'
+import axios from 'axios';
 import { useState } from "react";
+import PublishIcon from '@mui/icons-material/Publish';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -27,7 +28,6 @@ function HomePage() {
 
     const handleFileChange = (event: any) => {
         const selectedFile: File = event.target.files?.[0];
-        console.log('Selected File:', selectedFile);
         setFile(selectedFile);
     };
     const IP_ADDRESS = import.meta.env.VITE_API_URL
@@ -35,8 +35,6 @@ function HomePage() {
         const formData = new FormData();
         if (file) {
             formData.append('csvFile', file);
-            console.log(IP_ADDRESS);
-
             try {
                 const response = await axios.post(`${IP_ADDRESS}/csv`, formData);
             
@@ -76,18 +74,19 @@ function HomePage() {
 
                 <Box display="flex" alignItems="center" flexDirection="column" justifyContent="space-around">
                     <FileOpenOutlinedIcon sx={{ fontSize: 60 }} />
+                    {file ? file.name : 'No file selected'}
                     <Button
                         variant="outlined"
                         component="label"
                         startIcon={<CloudUploadIcon />}
                     >
-                        Upload file
+                        {file ? 'Change File' : 'Upload File'}
                         <VisuallyHiddenInput type="file" name="upload" onChange={handleFileChange} />
                     </Button>
                     <Button
                         variant="outlined"
                         component="label"
-                        startIcon={<CloudUploadIcon />}
+                        startIcon={<PublishIcon />}
                         onClick={uploadFile}
                     >
                         Submit file

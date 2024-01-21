@@ -11,37 +11,36 @@ dotenv.config()
 
 const app = express()
 
+app.use(bodyParser.urlencoded());
 app.use(bodyParser.json())
 app.use(cors())
-
-
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 app.get("/get_appointments", async (req, res) => {
-    const date = req.body.date
+    const date = req.query.date!.toString()
     const newDate = new Date(date)
     const result = await getAppointments(newDate)
     res.json(result)
 })
 
-app.post("/add_appointment", async (req, res) => {
-    const car_appointment = req.body.appointment
-    const bookingTime = new Date(car_appointment.bookingTime);
-    const selectedTime = new Date(car_appointment.selectedTime);
+app.post("/add_appointment", upload.none(), async (req, res) => {
+    console.log(req.body);
+    
+    const bookingTime = new Date(req.body.bookingTime);
+    const selectedTime = new Date(req.body.selectedTime);
 
     const result = await insertAppointment({
         bookingTime: bookingTime,
         selectedTime: selectedTime,
-        vehicle: car_appointment.vehicle.toLowerCase() as VehicleType
+        vehicle: req.body.vehicule.toLowerCase() as VehicleType
     });
 
-    result && res.send(result)
+    return res.send(result);
 })
 
-app.post("/csv", upload.single('csvFile'), async (req, res) => {
+app.post("/csv", upload.single('csvFile'), async (req, res) => {    
     const csvFile = req.file;
     console.log(csvFile)
     if (!csvFile) {
