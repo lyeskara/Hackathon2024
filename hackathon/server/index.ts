@@ -5,7 +5,7 @@ import cors from 'cors'
 import multer from 'multer'
 import fastCsv from 'fast-csv'
 import { Readable } from 'stream';
-import { VehicleType, insertAppointment } from './queries.js'
+import { VehicleType, insertAppointment, getAppointments } from './queries.js'
 
 dotenv.config()
 
@@ -20,7 +20,12 @@ app.use(cors())
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
+app.get("/get_appointments", async (req,res)=>{
+    const date = req.body.date
+    const newDate = new Date(date)
+    const result = await getAppointments(newDate)
+    res.json(result)
+})
 
 app.post("/add_appointment", async (req, res) => {
     const car_appointment = req.body.appointment
@@ -58,7 +63,6 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                     selectedTime: selectedTimeDate,
                     vehicle: vehicle.toLowerCase() as VehicleType
                 };
-                console.log(row)
 
                 const result = await insertAppointment(car_appointment);
 
@@ -66,7 +70,7 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                 console.error('Invalid row format:', row);
             }
         })
-        .on('end', () => {
+        .on('end', async () => {
             // Do something with the processed CSV data, for example, save it to a database
             res.json({ message: 'CSV file processed successfully' });
         })

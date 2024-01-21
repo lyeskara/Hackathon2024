@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1705787489140,
-      "tag": "0000_lowly_ricochet",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1705791497335,
-      "tag": "0001_bored_stone_men",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1705794816215,
-      "tag": "0002_flat_gorgon",
+      "when": 1705821713344,
+      "tag": "0000_closed_tarantula",
       "breakpoints": true
     }
   ]
