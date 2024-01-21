@@ -31,63 +31,62 @@ export async function insertAppointment(appointment: { bookingTime: Date, select
         const finishTime = finishingTime
         const bookingTimeDate = appointment.bookingTime
 
-        // let isDuplicate: boolean 
-        // try {
-        //     const duplicateResult = await db.execute(sql.raw(`
-        //     SELECT 
-        //         CASE WHEN EXISTS (
-        //             SELECT 1
-        //             FROM car_appointments
-        //             WHERE 
-        //                 appointment_time = ${appointmentTime} AND 
-        //                 booking_time = ${bookingTimeDate} AND 
-        //                 finish_time = ${finishTime} AND 
-        //                 vehicle = ${appointment.vehicle}
-        //         ) THEN TRUE ELSE FALSE END AS is_duplicate;
-        // `));
-        //     isDuplicate = duplicateResult.rowAsArray.valueOf()
-        //     console.log(isDuplicate)
-        //     if (isDuplicate) {
-        //         return "duplicate"
-        //     }
-        // } catch (Error) {
-        //     console.log("duplicate checking query error")
-        //     console.log(Error.message)
-        // }
+        let isDuplicate: boolean 
+        try {
+            const duplicateResult = await db.execute(sql.raw(`
+            SELECT 
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM car_appointments
+                    WHERE 
+                        appointment_time = ${appointmentTime} AND 
+                        booking_time = ${bookingTimeDate} AND 
+                        finish_time = ${finishTime} AND 
+                        vehicle = ${appointment.vehicle}
+                ) THEN TRUE ELSE FALSE END AS is_duplicate;
+        `));
+            isDuplicate = duplicateResult.rowAsArray.valueOf()
+            console.log(isDuplicate)
+            if (isDuplicate) {
+                return "duplicate"
+            }
+        } catch (Error) {
+            console.log("duplicate checking query error")
+            console.log(Error.message)
+        }
 
-        // how to 
         
-        // try {
-        //     const overlapResult = await db.execute(sql`
-        //     SELECT 
-        //         CASE WHEN EXISTS (
-        //             SELECT 1
-        //             FROM car_appointments
-        //             WHERE (appointment_time, finish_time) OVERLAPS (${appointmentTime}, ${finishingTime})
-        //         ) THEN TRUE ELSE FALSE END AS is_overlapping;
-        //     `);
-        //     const is_overlapping = overlapResult.rowAsArray.valueOf()
-        //     console.log(overlapResult)
-        //     if (is_overlapping) {
-        //         try {
-        //             await db.insert(turned_away).values(
-        //                 {
-        //                     booking_time: appointment.bookingTime,
-        //                     appointment_time: appointment.selectedTime,
-        //                     finish_time: finishingTime,
-        //                     cost: cost,
-        //                     vehicle: appointment.vehicle
-        //                 })
-        //             return "overlapping"
-        //         } catch (error) {
-        //             console.log("turned away adding error")
-        //             return null
-        //         }
-        //     }
-        // } catch (Error) {
-        //     console.log("overlapping checking query error")
-        //     console.log(Error.message)
-        // }
+        try {
+            const overlapResult = await db.execute(sql`
+            SELECT 
+                CASE WHEN EXISTS (
+                    SELECT 1
+                    FROM car_appointments
+                    WHERE (appointment_time, finish_time) OVERLAPS (${appointmentTime}, ${finishingTime})
+                ) THEN TRUE ELSE FALSE END AS is_overlapping;
+            `);
+            const is_overlapping = overlapResult.rowAsArray.valueOf()
+            console.log(overlapResult)
+            if (is_overlapping) {
+                try {
+                    await db.insert(turned_away).values(
+                        {
+                            booking_time: appointment.bookingTime,
+                            appointment_time: appointment.selectedTime,
+                            finish_time: finishingTime,
+                            cost: cost,
+                            vehicle: appointment.vehicle
+                        })
+                    return "overlapping"
+                } catch (error) {
+                    console.log("turned away adding error")
+                    return null
+                }
+            }
+        } catch (Error) {
+            console.log("overlapping checking query error")
+            console.log(Error.message)
+        }
 
         
         try {

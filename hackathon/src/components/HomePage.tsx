@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CarRepairOutlinedIcon from '@mui/icons-material/CarRepairOutlined';
 import FileOpenOutlinedIcon from '@mui/icons-material/FileOpenOutlined';
+import axios from 'axios'
+import { useState } from "react";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -17,6 +19,43 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function HomePage() {
+
+    const [file, setFile] = useState<File>();
+
+    const handleFileChange = (event: any) => {
+        const selectedFile: File = event.target.files?.[0];
+        console.log('Selected File:', selectedFile);
+        setFile(selectedFile);
+    };
+    const IP_ADDRESS = import.meta.env.VITE_API_URL
+    const uploadFile = async () => {
+        const formData = new FormData();
+        if (file) {
+            formData.append('csvFile', file);
+            console.log(IP_ADDRESS);
+
+            try {
+                const response = await axios.post(`${IP_ADDRESS}/csv`, formData, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                    },
+                    transformRequest: data => data,
+                  });
+            
+                if (!response.data) {
+                    // Handle non-OK responses
+                    console.error('Error:', response.status, response.statusText);
+                    return;
+                }
+            
+                console.log('Server response:', response.data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        console.log('something happen');
+    };
+
     return (
         <Box
             width="100%"
@@ -45,8 +84,17 @@ function HomePage() {
                         startIcon={<CloudUploadIcon />}
                     >
                         Upload file
-                        <VisuallyHiddenInput type="file" />
+                        <VisuallyHiddenInput type="file" name="upload" onChange={handleFileChange} />
                     </Button>
+                    <Button
+                        variant="outlined"
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                        onClick={uploadFile}
+                    >
+                        Submit file
+                    </Button>
+
                 </Box>
             </Box>
         </Box>

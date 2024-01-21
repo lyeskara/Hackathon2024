@@ -4,20 +4,23 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import multer from 'multer'
 import fastCsv from 'fast-csv'
-import fs from 'fs'
 import { Readable } from 'stream';
 import { VehicleType, insertAppointment } from './queries.js'
+
 dotenv.config()
 
 const app = express()
 
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 app.use(cors())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+// app.use(CsvUpload())
+
 
 const PORT = process.env.PORT || 3000;
 
-const storage = multer.memoryStorage(); // Use memory storage for handling file uploads
-const upload = multer({ storage: storage });
+const upload = multer();
 
 
 
@@ -25,8 +28,8 @@ app.post("/add_appointment", async (req, res) => {
     const car_appointment = req.body.appointment
     const bookingTime = new Date(car_appointment.bookingTime);
     const selectedTime = new Date(car_appointment.selectedTime);
-    
-    const result = await insertAppointment( {
+
+    const result = await insertAppointment({
         bookingTime: bookingTime,
         selectedTime: selectedTime,
         vehicle: car_appointment.vehicle.toLowerCase() as VehicleType
@@ -36,6 +39,8 @@ app.post("/add_appointment", async (req, res) => {
 })
 
 app.post("/csv", upload.single('csvFile'), async (req, res) => {
+    console.log(1)
+
     const csvFile = req.file;
 
     if (!csvFile) {
@@ -53,7 +58,6 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                     const [bookingTime, selectedTime, vehicle] = row;
                     const bookingTimeDate = new Date(bookingTime);
                     const selectedTimeDate = new Date(selectedTime);
-
                     const car_appointment = {
                         bookingTime: bookingTimeDate,
                         selectedTime: selectedTimeDate,
@@ -61,7 +65,7 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
                     };
 
                     const result = await insertAppointment(car_appointment);
-                    if (result ) { results.push([car_appointment, result]) } // (result === 'duplicate' || result === 'overlapping')
+                    if (result) { results.push([car_appointment, result]) } // (result === 'duplicate' || result === 'overlapping')
 
                 } else {
                     console.error('Invalid row format:', row);
@@ -81,6 +85,6 @@ app.post("/csv", upload.single('csvFile'), async (req, res) => {
 
 })
 
-app.listen(PORT, () => {
-    console.log(`Server is running on ${PORT}`);
+app.listen(3000, () => {
+    console.log(`Server is running on ${3000}`);
 });
